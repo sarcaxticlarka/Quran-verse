@@ -27,6 +27,7 @@ export interface Reflection {
   user_id: string;
   verse_key: string;
   reflection_text: string;
+  translation_id?: number;
   created_at: string;
   updated_at: string;
 }
@@ -35,6 +36,7 @@ export interface CreateReflectionRequest {
   user_id: string;
   verse_key: string;
   reflection_text: string;
+  translation_id?: number;
 }
 
 export interface ReflectionsResponse {
@@ -47,6 +49,9 @@ export interface SearchQuery {
   query: string;
   user_id: string;
   page?: number;
+  size?: number;
+  language?: string;
+  translations?: string;
 }
 
 export interface SearchResult {
@@ -87,4 +92,77 @@ export interface ApiResponse<T = any> {
   message: string;
   data?: T;
   error?: string;
+}
+
+// Audio types
+export interface AudioSegment {
+  word_index: number;
+  start_ms: number;
+  end_ms: number;
+}
+
+export interface VerseTimestamp {
+  verse_key: string;
+  timestamp_from: number;
+  timestamp_to: number;
+  duration: number;
+  segments?: AudioSegment[];
+}
+
+export interface AudioFile {
+  id: number;
+  chapter_id: number;
+  file_size: number;
+  format: string;
+  audio_url: string;
+  duration: number;
+}
+
+export interface ChapterAudioData {
+  audio_file: AudioFile;
+  verse_timings?: VerseTimestamp[];
+}
+
+// Chapter types
+export interface Chapter {
+  id: number;
+  name: string;
+  arabic_name: string;
+  name_simple: string;
+  verses_count: number;
+  revelation_place: string;
+  revelation_order: number;
+}
+
+export interface ChapterTranslation {
+  resource_id: number;
+  resource_name: string;
+  id: number;
+  text: string;
+  verse_id: number;
+  language_id: number;
+  language_name: string;
+  verse_key: string;
+  chapter_id: number;
+  verse_number: number;
+  juz_number: number;
+  hizb_number: number;
+  rub_number: number;
+  page_number: number;
+}
+
+// Reciter types
+export interface Reciter {
+  id: string | number;
+  name: string;
+  style?: string;
+  country?: string;
+}
+
+// Translation resource types
+export interface TranslationResource {
+  id: number;
+  name: string;
+  language: string;
+  author: string;
 }

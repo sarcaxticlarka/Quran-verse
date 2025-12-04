@@ -27,7 +27,14 @@ export const searchVerses = async (req: Request, res: Response): Promise<void> =
     console.log(`🔍 Searching for: "${query}"`);
 
     // Perform the search via Quran API
-    const searchResults = await quranApiService.searchVerses(query, page);
+    // Request both English (149) and Urdu (54) translations
+    const searchResults = await quranApiService.searchVerses(
+      query, 
+      page, 
+      20, 
+      undefined, 
+      '149,54' // Request English and Urdu translations with correct IDs
+    );
 
     // Log the search query to database
     await SearchHistory.create({

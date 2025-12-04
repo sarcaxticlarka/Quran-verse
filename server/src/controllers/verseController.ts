@@ -46,3 +46,28 @@ export const getVerseOfDay = async (req: Request, res: Response): Promise<void> 
     });
   }
 };
+
+export const getVerseByKey = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { verseKey } = req.params;
+    const translationId = req.query.translation_id as string || '131'; // Default to English
+    
+    console.log(`🔍 Fetching verse ${verseKey} with translation ${translationId}`);
+    
+    const verse = await quranApiService.getVerseByKey(verseKey, translationId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Verse retrieved successfully',
+      data: verse,
+    });
+  } catch (error) {
+    console.error('Error in getVerseByKey controller:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve verse',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+

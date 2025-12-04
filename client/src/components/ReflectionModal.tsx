@@ -8,9 +8,11 @@ import { Verse, Reflection } from '@/types';
 interface ReflectionModalProps {
   verse: Verse;
   onClose: () => void;
+  translationText?: string;
+  selectedTranslation?: string;
 }
 
-export default function ReflectionModal({ verse, onClose }: ReflectionModalProps) {
+export default function ReflectionModal({ verse, onClose, translationText, selectedTranslation }: ReflectionModalProps) {
   const [reflectionText, setReflectionText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -41,6 +43,7 @@ export default function ReflectionModal({ verse, onClose }: ReflectionModalProps
         user_id: userId,
         verse_key: verse.verse_key,
         reflection_text: reflectionText,
+        translation_id: selectedTranslation ? Number(selectedTranslation) : undefined,
       });
 
       setReflectionText('');

@@ -1,18 +1,22 @@
 'use client';
 
 import VerseOfDay from '@/components/VerseOfDay';
-import SearchComponent from '@/components/SearchComponent';
+import Link from 'next/link';
+import { Search, BookOpen, Heart } from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <header className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Quran Application
-          </h1>
-          <p className="text-gray-600 text-lg">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <BookOpen className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+              Quran Application
+            </h1>
+          </div>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
             Daily verses, reflections, and spiritual insights
           </p>
         </header>
@@ -22,14 +26,48 @@ export default function HomePage() {
           {/* Verse of the Day */}
           <VerseOfDay />
 
-          {/* Search Component */}
-          <SearchComponent />
+          {/* Quick Links */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link 
+              href="/search"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 border-l-4 border-blue-500 hover:shadow-xl transition-shadow group"
+            >
+              <div className="flex items-center gap-4">
+                <Search className="w-10 h-10 text-blue-500 group-hover:scale-110 transition-transform" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    Search Quran
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Find verses by keywords or references
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            <Link 
+              href="/reflections"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 border-l-4 border-purple-500 hover:shadow-xl transition-shadow group"
+            >
+              <div className="flex items-center gap-4">
+                <Heart className="w-10 h-10 text-purple-500 group-hover:scale-110 transition-transform" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    My Reflections
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    View your saved reflections and insights
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* Footer */}
-        <footer className="mt-12 text-center text-gray-500 text-sm">
+        <footer className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
           <p>© 2024 Quran Application. Built with Next.js and Node.js</p>
-          <p className="mt-2">Data from Quran.Foundation API</p>
+          <p className="mt-2">Data from Quran.com API</p>
         </footer>
       </div>
     </main>

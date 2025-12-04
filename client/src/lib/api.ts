@@ -5,7 +5,6 @@ import {
   ReflectionsResponse,
   SearchQuery,
   SearchResponse,
-  SearchHistoryResponse,
   ApiResponse,
 } from '@/types';
 
@@ -58,10 +57,85 @@ class ApiClient {
     return data;
   }
 
-  async getSearchHistory(userId: string, limit: number = 20): Promise<SearchHistoryResponse> {
-    const { data } = await this.client.get<SearchHistoryResponse>(
-      `/search/history/${userId}?limit=${limit}`
-    );
+  // Translations
+  async getTranslations(): Promise<any> {
+    const { data } = await this.client.get('/translations');
+    return data;
+  }
+
+  async getReciters(): Promise<any> {
+    const { data } = await this.client.get('/reciters');
+    return data;
+  }
+
+  async getChapters(): Promise<any> {
+    const { data } = await this.client.get('/chapters');
+    return data;
+  }
+
+  async getChapterVerses(chapterId: number, params?: {
+    translation?: string;
+    reciter?: string;
+    page?: number;
+  }): Promise<any> {
+    const { data } = await this.client.get(`/chapters/${chapterId}/verses`, { params });
+    return data;
+  }
+
+  async getChapterTranslations(resourceId: number, chapterNumber: number): Promise<any> {
+    const { data } = await this.client.get(`/translations/${resourceId}/chapter/${chapterNumber}`);
+    return data;
+  }
+
+  async getChapterAudio(reciterId: number, chapterNumber: number, segments: boolean = false): Promise<any> {
+    const { data } = await this.client.get(`/chapter-audio/${reciterId}/${chapterNumber}`, {
+      params: { segments: segments ? 'true' : 'false' }
+    });
+    return data;
+  }
+
+  // Positional search methods
+  async getVerseByPosition(
+    chapter: number,
+    verse: number,
+    translationId: string = '131'
+  ): Promise<any> {
+    const { data } = await this.client.get(`/verse-by-position/${chapter}/${verse}`, {
+      params: { translation: translationId }
+    });
+    return data;
+  }
+
+  async getVersesByJuz(juzNumber: number, translationId: string = '131'): Promise<any> {
+    const { data } = await this.client.get(`/verses-by-juz/${juzNumber}`, {
+      params: { translation: translationId }
+    });
+    return data;
+  }
+
+  async getVersesByHizb(hizbNumber: number, translationId: string = '131'): Promise<any> {
+    const { data } = await this.client.get(`/verses-by-hizb/${hizbNumber}`, {
+      params: { translation: translationId }
+    });
+    return data;
+  }
+
+  async getVersesByRub(rubNumber: number, translationId: string = '131'): Promise<any> {
+    const { data } = await this.client.get(`/verses-by-rub/${rubNumber}`, {
+      params: { translation: translationId }
+    });
+    return data;
+  }
+
+  async getVersesByRange(
+    chapter: number,
+    verseStart: number,
+    verseEnd: number,
+    translationId: string = '131'
+  ): Promise<any> {
+    const { data } = await this.client.get(`/verses-by-range/${chapter}/${verseStart}/${verseEnd}`, {
+      params: { translation: translationId }
+    });
     return data;
   }
 }
