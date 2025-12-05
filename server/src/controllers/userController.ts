@@ -137,7 +137,7 @@ export const getUserReflections = async (req: Request, res: Response): Promise<v
     });
 
     // Map to client-friendly (snake_case) shape
-    const mapped = reflections.map((r) => ({
+    const mapped = reflections.map((r: any) => ({
       id: r.id,
       user_id: user.email || user.id,
       verse_key: r.verseKey,

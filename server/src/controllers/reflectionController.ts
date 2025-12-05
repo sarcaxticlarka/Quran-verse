@@ -83,7 +83,7 @@ export const getReflectionsByVerseKey = async (req: Request, res: Response): Pro
     });
 
     // Normalize fields to snake_case for the client
-    const mapped = reflections.map((r) => ({
+    const mapped = reflections.map((r: any) => ({
       id: r.id,
       user_id: r.user?.email || r.userId,
       verse_key: r.verseKey,
@@ -137,7 +137,7 @@ export const getReflectionsByUserId = async (req: Request, res: Response): Promi
       orderBy: { createdAt: 'desc' },
     });
 
-    const mapped = reflections.map((r) => ({
+    const mapped = reflections.map((r: any) => ({
       id: r.id,
       user_id: user.email || user.id,
       verse_key: r.verseKey,
