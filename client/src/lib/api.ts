@@ -19,7 +19,7 @@ class ApiClient {
       },
     });
 
-    // Response interceptor for error handling
+   
     this.client.interceptors.response.use(
       (response) => response,
       (error) => {
@@ -29,9 +29,30 @@ class ApiClient {
     );
   }
 
-  // Verse of the Day
+   
   async getVerseOfDay(): Promise<VerseOfDayResponse> {
     const { data } = await this.client.get<VerseOfDayResponse>('/verse-of-day');
+    return data;
+  }
+
+  // User Management (Google OAuth)
+  async syncGoogleUser(userData: {
+    email: string;
+    name: string;
+    google_id: string;
+    profile_image?: string;
+  }): Promise<ApiResponse> {
+    const { data } = await this.client.post<ApiResponse>('/users/sync', userData);
+    return data;
+  }
+
+  async getUserByEmail(email: string): Promise<ApiResponse> {
+    const { data } = await this.client.get<ApiResponse>(`/users/${email}`);
+    return data;
+  }
+
+  async getUserReflections(email: string): Promise<ReflectionsResponse> {
+    const { data } = await this.client.get<ReflectionsResponse>(`/users/${email}/reflections`);
     return data;
   }
 

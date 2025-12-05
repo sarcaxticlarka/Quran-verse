@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import Reflection from '../models/Reflection';
+import prisma from '../config/prisma';
 
 // POST /api/reflections - Create a new reflection
 export const createReflection = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user_id, verse_key, reflection_text } = req.body;
+    const { user_id, verse_key, reflection_text, translation_id } = req.body;
 
     // Validation
     if (!user_id || !verse_key || !reflection_text) {
@@ -15,17 +15,43 @@ export const createReflection = async (req: Request, res: Response): Promise<voi
       return;
     }
 
+    // Find or create user by email
+    let user = await prisma.user.findUnique({ where: { email: user_id } });
+
+    if (!user) {
+      // If user doesn't exist, return error (they should sync first)
+      res.status(400).json({
+        success: false,
+        message: 'User not found. Please sign in with Google first.',
+      });
+      return;
+    }
+
     // Create the reflection
-    const reflection = await Reflection.create({
-      user_id,
-      verse_key,
-      reflection_text,
+    const reflection = await prisma.reflection.create({
+      data: {
+        userId: user.id,
+        verseKey: verse_key,
+        reflectionText: reflection_text,
+        translationId: translation_id,
+      },
     });
+
+    // Map Prisma camelCase fields to snake_case shape expected by the client
+    const mapped = {
+      id: reflection.id,
+      user_id: user.email || user.id,
+      verse_key: reflection.verseKey,
+      reflection_text: reflection.reflectionText,
+      translation_id: reflection.translationId ?? null,
+      created_at: reflection.createdAt.toISOString(),
+      updated_at: reflection.updatedAt.toISOString(),
+    };
 
     res.status(201).json({
       success: true,
       message: 'Reflection created successfully',
-      data: reflection,
+      data: mapped,
     });
   } catch (error) {
     console.error('Error in createReflection controller:', error);
@@ -50,15 +76,27 @@ export const getReflectionsByVerseKey = async (req: Request, res: Response): Pro
       return;
     }
 
-    const reflections = await Reflection.findAll({
-      where: { verse_key: key },
-      order: [['created_at', 'DESC']],
+    const reflections = await prisma.reflection.findMany({
+      where: { verseKey: key },
+      orderBy: { createdAt: 'desc' },
+      include: { user: true },
     });
+
+    // Normalize fields to snake_case for the client
+    const mapped = reflections.map((r) => ({
+      id: r.id,
+      user_id: r.user?.email || r.userId,
+      verse_key: r.verseKey,
+      reflection_text: r.reflectionText,
+      translation_id: r.translationId ?? null,
+      created_at: r.createdAt.toISOString(),
+      updated_at: r.updatedAt.toISOString(),
+    }));
 
     res.status(200).json({
       success: true,
-      message: `Retrieved ${reflections.length} reflection(s) for verse ${key}`,
-      data: reflections,
+      message: `Retrieved ${mapped.length} reflection(s) for verse ${key}`,
+      data: mapped,
     });
   } catch (error) {
     console.error('Error in getReflectionsByVerseKey controller:', error);
@@ -83,15 +121,36 @@ export const getReflectionsByUserId = async (req: Request, res: Response): Promi
       return;
     }
 
-    const reflections = await Reflection.findAll({
-      where: { user_id: userId },
-      order: [['created_at', 'DESC']],
+    // Find user by email
+    const user = await prisma.user.findUnique({ where: { email: userId } });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+      return;
+    }
+
+    const reflections = await prisma.reflection.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: 'desc' },
     });
+
+    const mapped = reflections.map((r) => ({
+      id: r.id,
+      user_id: user.email || user.id,
+      verse_key: r.verseKey,
+      reflection_text: r.reflectionText,
+      translation_id: r.translationId ?? null,
+      created_at: r.createdAt.toISOString(),
+      updated_at: r.updatedAt.toISOString(),
+    }));
 
     res.status(200).json({
       success: true,
-      message: `Retrieved ${reflections.length} reflection(s) for user ${userId}`,
-      data: reflections,
+      message: `Retrieved ${mapped.length} reflection(s) for user ${userId}`,
+      data: mapped,
     });
   } catch (error) {
     console.error('Error in getReflectionsByUserId controller:', error);

@@ -3,6 +3,7 @@ import { getToken } from '../controllers/tokenController';
 import { getVerseOfDay, getVerseByKey } from '../controllers/verseController';
 import { createReflection, getReflectionsByVerseKey, getReflectionsByUserId } from '../controllers/reflectionController';
 import { searchVerses, getSearchHistory } from '../controllers/searchController';
+import { syncGoogleUser, getUserByEmail, getUserReflections } from '../controllers/userController';
 import { 
   getAvailableTranslations, 
   getAvailableReciters, 
@@ -27,6 +28,11 @@ router.get('/token', getToken);
 // Verse of the day endpoint
 router.get('/verse-of-day', getVerseOfDay);
 router.get('/verse/:verseKey', getVerseByKey);
+
+// User endpoints (Google OAuth)
+router.post('/users/sync', syncGoogleUser);
+router.get('/users/:email', getUserByEmail);
+router.get('/users/:email/reflections', getUserReflections);
 
 // Reflections endpoints
 router.post('/reflections', createReflection);

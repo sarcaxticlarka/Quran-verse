@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import quranApiService from '../services/quranApiService';
-import SearchHistory from '../models/SearchHistory';
+import prisma from '../config/prisma';
 
 // POST /api/search - Search verses and log the query
 export const searchVerses = async (req: Request, res: Response): Promise<void> => {
@@ -37,9 +37,13 @@ export const searchVerses = async (req: Request, res: Response): Promise<void> =
     );
 
     // Log the search query to database
-    await SearchHistory.create({
-      user_id,
-      search_query: query,
+    const resultCount = searchResults.search?.results?.length || 0;
+    await prisma.searchHistory.create({
+      data: {
+        userId: user_id,
+        query: query,
+        resultCount: resultCount,
+      },
     });
 
     console.log(`✅ Search query logged for user ${user_id}`);
@@ -73,10 +77,10 @@ export const getSearchHistory = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const history = await SearchHistory.findAll({
-      where: { user_id: userId },
-      order: [['created_at', 'DESC']],
-      limit,
+    const history = await prisma.searchHistory.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
     });
 
     res.status(200).json({

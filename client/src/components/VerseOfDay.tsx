@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import api from '@/lib/api';
 import ReflectionModal from './ReflectionModal';
 import { Verse } from '@/types';
-import { Globe, BookOpen, PenLine } from 'lucide-react';
+import { BookOpen, Star, PenLine } from 'lucide-react';
 
 const LANGUAGE_OPTIONS = [
   { id: 149, language: 'English' }, // Fadel Soliman, Bridges' translation
@@ -69,84 +69,78 @@ export default function VerseOfDay() {
   }, [selectedLanguage, verse]);
 
   if (error) {
-    return <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6"><p className="text-red-800 dark:text-red-400 text-center">Failed to load verse</p></div>;
+    return (
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+        <p className="text-red-800 dark:text-red-400 text-center">Failed to load verse</p>
+      </div>
+    );
   }
 
   if (isLoading) {
-    return <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 animate-pulse"><div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div></div>;
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 animate-pulse">
+        <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      </div>
+    );
   }
 
   if (!verse) {
-    return <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6"><p className="text-yellow-800 dark:text-yellow-400 text-center">No verse available</p></div>;
+    return (
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+        <p className="text-yellow-800 dark:text-yellow-400 text-center">No verse available</p>
+      </div>
+    );
   }
 
   const handleReflect = () => {
     setSelectedVerse(verse);
-    setShowModal(true);
   };
 
   return (
-    <>
-      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-lg p-8 mb-6 border border-emerald-200 dark:border-emerald-800">
-        <div className="mb-6 flex items-center gap-3">
-          <BookOpen className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Verse of the Day</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Surah {verse.chapter_id}, Ayah {verse.verse_number}</p>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <p className="text-3xl font-arabic text-right leading-loose text-gray-900 dark:text-white">{verse.text_uthmani}</p>
-        </div>
-
-        <div className="mb-6">
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-            <Globe className="w-4 h-4" />
-            Choose Translation Language
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            {LANGUAGE_OPTIONS.map((lang) => (
-              <button
-                key={lang.id}
-                onClick={() => setSelectedLanguage(String(lang.id))}
-                className={`px-4 py-3 rounded-lg transition-all text-center font-medium border-2 ${
-                  String(selectedLanguage) === String(lang.id)
-                    ? 'bg-emerald-500 text-white border-emerald-600 shadow-lg'
-                    : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:border-emerald-400 dark:hover:border-emerald-500'
-                }`}
-              >
-                <div className="text-sm font-medium">{lang.language}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {loadingTranslation ? (
-          <div className="mb-6 p-4 bg-white dark:bg-gray-700 rounded-lg animate-pulse"><div className="h-20 bg-gray-200 dark:bg-gray-600 rounded"></div></div>
-        ) : (
-          <div className="mb-6 p-4 bg-white dark:bg-gray-700 rounded-lg border-l-4 border-emerald-500">
-            <p className="text-lg text-gray-800 dark:text-gray-200 leading-relaxed">{translationText}</p>
-          </div>
-        )}
-
-        <button
-          onClick={handleReflect}
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-lg transition-all transform hover:scale-105 active:scale-95"
-        >
-          <PenLine className="w-5 h-5" />
-          Write Reflection
-        </button>
+    <div className="bg-primary-50 rounded-xl shadow-lg p-6 flex flex-col gap-4 border border-gold-100">
+      <div className="flex items-center gap-3 mb-2">
+        <BookOpen className="w-7 h-7 text-primary-700" />
+        <h2 className="text-2xl font-display font-bold text-primary-800">Verse of the Day</h2>
+        <Star className="w-6 h-6 text-gold-500" />
       </div>
-
-      {showModal && selectedVerse && (
-        <ReflectionModal
-          verse={selectedVerse}
-          translationText={translationText}
-          selectedTranslation={selectedLanguage}
-          onClose={() => setShowModal(false)}
-        />
+      {loadingTranslation ? (
+        <div className="text-primary-600">Loading translation...</div>
+      ) : (
+        <div className="space-y-2">
+          <div className="text-lg font-arabic text-right text-primary-900 leading-loose">
+            {verse.text_uthmani}
+          </div>
+          <div className="flex items-center gap-2 text-sm text-primary-700">
+            <Star className="w-4 h-4 text-gold-500" />
+            <span>{LANGUAGE_OPTIONS.find(l => l.id.toString() === selectedLanguage)?.language}</span>
+          </div>
+          <div className="text-base text-primary-800 mt-2">
+            {translationText}
+          </div>
+          <div className="flex items-center gap-2 mt-2">
+            <button
+              className="bg-gold-100 hover:bg-gold-300 text-primary-900 px-3 py-1 rounded transition text-sm flex items-center gap-1 border border-gold-500 shadow"
+              onClick={() => setShowModal(true)}
+            >
+              <PenLine className="w-5 h-5 text-accent-500" /> Reflect
+            </button>
+          </div>
+        </div>
       )}
-    </>
+      <div className="flex gap-2 mt-4">
+        {LANGUAGE_OPTIONS.map(option => (
+          <button
+            key={option.id}
+            className={`px-3 py-1 rounded text-sm font-semibold border transition ${selectedLanguage === option.id.toString() ? 'bg-primary-600 text-white border-gold-500' : 'bg-gold-100 text-primary-800 border-gold-300'}`}
+            onClick={() => setSelectedLanguage(option.id.toString())}
+          >
+            {option.language}
+          </button>
+        ))}
+      </div>
+      {showModal && verse && (
+        <ReflectionModal verse={verse} onClose={() => setShowModal(false)} />
+      )}
+    </div>
   );
 }

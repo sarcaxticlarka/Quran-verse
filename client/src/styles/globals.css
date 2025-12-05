@@ -2,30 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap');
 
+/* Islamic-inspired color variables */
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 34, 58, 14;
+  --background-start-rgb: 246, 248, 243;
+  --background-end-rgb: 233, 245, 225;
+  --gold: #ffd700;
+  --primary-green: #6fa44a;
+  --accent-purple: #a78bfa;
+  --pattern-url: url('https://www.toptal.com/designers/subtlepatterns/patterns/islamic.png');
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 233, 245, 225;
+    --background-start-rgb: 34, 58, 14;
+    --background-end-rgb: 22, 36, 10;
+    --gold: #ffe9a7;
+    --primary-green: #355a1a;
+    --accent-purple: #8b5cf6;
   }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
+  background:
+    linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
-    )
+    ),
     rgb(var(--background-start-rgb));
+  font-family: 'Inter', 'Amiri', 'Noto Naskh Arabic', 'Scheherazade New', serif;
+  /* Subtle Islamic geometric pattern overlay */
+  background-image:
+    var(--pattern-url),
+    linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)));
+  background-repeat: repeat;
+  background-size: 400px 400px, auto;
 }
 
 @layer utilities {

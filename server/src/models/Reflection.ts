@@ -1,22 +1,25 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
+import User from './User';
 
 interface ReflectionAttributes {
   id: number;
-  user_id: string;
+  user_id: string | number;
   verse_key: string;
   reflection_text: string;
+  translation_id?: number;
   created_at?: Date;
   updated_at?: Date;
 }
 
-interface ReflectionCreationAttributes extends Optional<ReflectionAttributes, 'id' | 'created_at' | 'updated_at'> {}
+interface ReflectionCreationAttributes extends Optional<ReflectionAttributes, 'id' | 'created_at' | 'updated_at' | 'translation_id'> {}
 
 class Reflection extends Model<ReflectionAttributes, ReflectionCreationAttributes> implements ReflectionAttributes {
   public id!: number;
-  public user_id!: string;
+  public user_id!: string | number;
   public verse_key!: string;
   public reflection_text!: string;
+  public translation_id?: number;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
 }
@@ -31,7 +34,7 @@ Reflection.init(
     user_id: {
       type: DataTypes.STRING,
       allowNull: false,
-      comment: 'Simulated user identifier (session ID or placeholder)',
+      comment: 'User identifier or email from Google auth',
     },
     verse_key: {
       type: DataTypes.STRING,
@@ -41,6 +44,12 @@ Reflection.init(
     reflection_text: {
       type: DataTypes.TEXT,
       allowNull: false,
+      comment: 'User reflection text',
+    },
+    translation_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: 'Translation ID if reflection was made with specific translation',
     },
     created_at: {
       type: DataTypes.DATE,

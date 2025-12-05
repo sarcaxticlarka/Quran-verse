@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model for Google OAuth
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  name          String
+  googleId      String    @unique @map("google_id")
+  profileImage  String?   @map("profile_image")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  reflections   Reflection[]
+
+  @@map("users")
+  @@index([email])
+  @@index([googleId])
+}
+
+// Reflection model for user reflections
+model Reflection {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  verseKey        String    @map("verse_key")
+  reflectionText  String    @db.Text @map("reflection_text")
+  translationId   Int?      @map("translation_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reflections")
+  @@index([userId])
+  @@index([verseKey])
+  @@index([createdAt])
+}
+
+// SearchHistory model for tracking searches
+model SearchHistory {
+  id          Int       @id @default(autoincrement())
+  userId      String    @map("user_id")
+  query       String    @db.Text
+  resultCount Int       @map("result_count")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@map("search_history")
+  @@index([userId])
+  @@index([createdAt])
+}

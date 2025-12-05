@@ -1,279 +1,362 @@
-# Quran Application
+# 📖 Quran Application
 
-A full-stack web application for exploring the Quran with daily verses, personal reflections, and verse search capabilities. Built with Next.js, Node.js, Express, PostgreSQL, and TypeScript.
+A beautiful, modern web application for exploring the Quran with daily verses, advanced search, personal reflections, and an Islamic-inspired user interface.
 
-## 🌟 Features
+---
 
-### Backend (Node.js/Express)
-- ✅ **OAuth2 Token Management**: Secure authentication with Quran.Foundation API
-- ✅ **Verse of the Day API**: Random verse with 24-hour caching for sustainability
-- ✅ **Reflections CRUD**: Custom database operations for user reflections
-- ✅ **Search API**: Proxy to Quran.Foundation with query logging
-- ✅ **PostgreSQL Database**: Persistent storage with Sequelize ORM
-- ✅ **Caching Layer**: Optimized performance with node-cache
-- ✅ **TypeScript**: Type-safe development
-- ✅ **Error Handling**: Comprehensive error management
+## 🎯 Overview
 
-### Frontend (Next.js/React)
-- ✅ **Verse of the Day Component**: Beautiful display of daily verses
-- ✅ **Reflection Modal**: Add and view personal reflections
-- ✅ **Search Component**: Search verses with history tracking
-- ✅ **Responsive Design**: Mobile-friendly UI with Tailwind CSS
-- ✅ **Data Fetching**: SWR for optimized caching and revalidation
-- ✅ **TypeScript**: Full type safety
-- ✅ **Loading States**: Proper UX with loading indicators
+**Quran Application** is a full-stack web application built with modern technologies that provides users with an engaging platform to:
+- Discover daily Quranic verses
+- Search verses by keywords, phrases, or verse references
+- Save personal reflections on verses
+- Experience beautiful Arabic typography and Islamic-inspired design
+- Access translations in multiple languages
 
-## 📁 Project Structure
+---
 
-```
-quran/
-├── server/               # Backend API (Node.js/Express)
-│   ├── src/
-│   │   ├── config/      # Database configuration
-│   │   ├── models/      # Sequelize models
-│   │   ├── services/    # Business logic
-│   │   ├── controllers/ # Route handlers
-│   │   ├── routes/      # API routes
-│   │   └── index.ts     # Server entry point
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── .env
-│
-├── client/              # Frontend (Next.js/React)
-│   ├── src/
-│   │   ├── app/        # Next.js pages
-│   │   ├── components/ # React components
-│   │   ├── lib/        # API client
-│   │   ├── types/      # TypeScript types
-│   │   └── styles/     # Global styles
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── .env.local
-│
-└── README.md           # This file
-```
+## ✨ Key Features
 
-## 🚀 Quick Start
+### 🏠 Home Page
+- **Verse of the Day**: Randomly displays a daily verse with:
+  - Beautiful Arabic text in Uthmani font
+  - English translation
+  - Verse reference (Surah & Ayah)
+  - Option to add personal reflections
+  
+- **Quick Navigation**:
+  - Search Quran - Find verses by keywords or references
+  - My Reflections - View saved personal reflections
+  
+- **Islamic Design Theme**:
+  - Green and gold color palette inspired by Islamic culture
+  - Crescent moon and mosque icons as decorative elements
+  - Responsive design for mobile and desktop
 
-### Prerequisites
-- Node.js >= 18.x
-- npm or yarn
-- PostgreSQL database (provided)
+### 🔍 Advanced Search
+- **Multiple Search Modes**:
+  - Search by keywords (e.g., "mercy", "prayer", "patience")
+  - Search by verse reference (e.g., "2:255" for Ayat al-Kursi)
+  - Real-time search results with pagination
+  
+- **Features**:
+  - Beautiful result cards with Arabic text and translations
+  - Responsive grid layout
+  - Error handling and loading states
+  - Helpful tips for first-time users
 
-### 1. Backend Setup
+### 💭 Personal Reflections
+- **Add Reflections**: Write and save personal thoughts on any verse
+- **View Reflections**: See all your previous reflections for a verse
+- **User Authentication**: Secure login with Google OAuth
+- **Formatted Timestamps**: Track when you added each reflection
+- **Real-time Updates**: Reflections sync instantly
 
-```bash
-# Navigate to server directory
-cd server
+### 🎨 Beautiful UI/UX
+- **Islamic-Inspired Theme**:
+  - Primary green color (#6fa44a) - representing nature and life
+  - Gold accents (#ffd700) - symbolizing spirituality
+  - Purple accents (#a78bfa) - for elegant highlights
+  
+- **Modern Components**:
+  - Lucide React icons for clean, professional look
+  - Smooth transitions and hover effects
+  - Properly sized and colored buttons with icons
+  - Card-based layouts with shadows and borders
 
-# Install dependencies
-npm install
+- **Responsive Design**:
+  - Mobile-first approach
+  - Adapts seamlessly to all screen sizes
+  - Touch-friendly buttons and inputs
 
-# Create .env file with database credentials
-# (Already created with your credentials)
+---
 
-# Sync database models
-npm run db:sync
+## 🛠️ Technology Stack
 
-# Start development server
-npm run dev
-```
-
-The backend will run on `http://localhost:5000`
-
-### 2. Frontend Setup
-
-```bash
-# Navigate to client directory
-cd client
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The frontend will run on `http://localhost:3000`
-
-## 🔧 API Endpoints
-
-### Authentication
-- `GET /api/token` - Get OAuth2 access token (with caching)
-
-### Verses
-- `GET /api/verse-of-day` - Get verse of the day (24h cache)
-
-### Reflections
-- `POST /api/reflections` - Create a new reflection
-  ```json
-  {
-    "user_id": "string",
-    "verse_key": "string",
-    "reflection_text": "string"
-  }
-  ```
-- `GET /api/reflections/:key` - Get reflections for a verse
-- `GET /api/reflections/user/:userId` - Get user's reflections
-
-### Search
-- `POST /api/search` - Search verses and log query
-  ```json
-  {
-    "query": "string",
-    "user_id": "string",
-    "page": 1
-  }
-  ```
-- `GET /api/search/history/:userId?limit=20` - Get search history
-
-## 💾 Database Schema
-
-### Reflections Table
-| Field            | Type      | Description                |
-|------------------|-----------|----------------------------|
-| id               | INTEGER   | Primary key                |
-| user_id          | STRING    | User identifier            |
-| verse_key        | STRING    | Verse reference (e.g., 2:255) |
-| reflection_text  | TEXT      | User's reflection          |
-| created_at       | TIMESTAMP | Creation timestamp         |
-| updated_at       | TIMESTAMP | Update timestamp           |
-
-### Search History Table
-| Field         | Type      | Description            |
-|---------------|-----------|------------------------|
-| id            | INTEGER   | Primary key            |
-| user_id       | STRING    | User identifier        |
-| search_query  | TEXT      | Search text            |
-| created_at    | TIMESTAMP | Creation timestamp     |
-
-## 🎯 Key Implementation Highlights
-
-### ✅ Token Caching
-The `/api/token` endpoint manages OAuth2 tokens with automatic caching:
-- Tokens are cached for 55 minutes (expires at 60 minutes)
-- Automatic refresh when expired
-- Reduces API calls to Quran.Foundation
-
-### ✅ Data Caching
-The `/api/verse-of-day` endpoint caches verses for 24 hours:
-- Reduces external API calls
-- Improves sustainability
-- Faster response times
-
-### ✅ Custom API Layer
-All endpoints are custom-built with:
-- Proper error handling
-- Request validation
-- Response formatting
-- Database integration
-
-### ✅ Database Integration
-Using Sequelize ORM with PostgreSQL:
-- Type-safe models
-- Automatic migrations
-- Connection pooling
-- SSL support for Neon
-
-### ✅ Code Structure
-Clear separation of concerns:
-- Config: Database and environment
-- Models: Data structure
-- Services: Business logic
-- Controllers: Request handling
-- Routes: API endpoints
-
-## 🔐 Environment Variables
-
-### Backend (.env)
-```env
-DATABASE_URL=postgresql://...
-QURAN_CLIENT_ID=a773511c-1f1e-407c-8d0f-1bb086bf8441
-QURAN_CLIENT_SECRET=DF1D2iADGh.gGGuHx-N8_gMI67
-QURAN_TOKEN_URL=https://api.quran.com/api/v4/oauth/token
-QURAN_API_BASE_URL=https://api.quran.com/api/v4
-PORT=5000
-NODE_ENV=development
-```
-
-### Frontend (.env.local)
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_USER_ID=default-user
-```
-
-## 🛠️ Tech Stack
+### Frontend
+- **Framework**: Next.js 14 (React 18)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with custom Islamic color palette
+- **Icons**: Lucide React
+- **Data Fetching**: SWR (stale-while-revalidate)
+- **HTTP Client**: Axios
+- **Authentication**: NextAuth v5
+- **Fonts**: Google Fonts (Amiri for Arabic, Inter for English)
 
 ### Backend
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Language**: TypeScript
-- **Database**: PostgreSQL (Neon)
-- **ORM**: Sequelize
-- **Caching**: node-cache
-- **HTTP Client**: Axios
+- **Database**: PostgreSQL with Prisma ORM
+- **Caching**: Node-Cache for performance optimization
+- **Authentication**: JWT tokens with OAuth2 integration
+- **External API**: Quran.com API v4
 
-### Frontend
-- **Framework**: Next.js 14 (App Router)
-- **UI Library**: React 18
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Data Fetching**: SWR
-- **HTTP Client**: Axios
+### Database
+- **ORM**: Prisma
+- **Models**:
+  - Users - User profiles and authentication
+  - Reflections - Personal verse reflections
+  - SearchHistory - User search queries
+  - VersePositions - Cached verse data
 
-## 📝 Development Commands
+---
 
-### Backend
-```bash
-npm run dev      # Start development server with hot reload
-npm run build    # Build for production
-npm start        # Start production server
-npm run db:sync  # Synchronize database models
+## 📁 Project Structure
+
+```
+quran/
+├── client/                          # Frontend (Next.js)
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── layout.tsx          # Root layout with Islamic motifs
+│   │   │   ├── page.tsx            # Home page
+│   │   │   ├── search/page.tsx     # Search page
+│   │   │   └── reflections/page.tsx # Reflections page
+│   │   ├── components/
+│   │   │   ├── VerseOfDay.tsx      # Daily verse component
+│   │   │   ├── ReflectionModal.tsx # Reflection editor
+│   │   │   ├── GoogleSignInButton.tsx
+│   │   │   ├── AuthProvider.tsx
+│   │   │   └── ...other components
+│   │   ├── lib/
+│   │   │   ├── api.ts              # API client methods
+│   │   │   └── auth.ts             # Authentication utilities
+│   │   ├── styles/
+│   │   │   └── globals.css         # Global styles with Islamic colors
+│   │   └── types/
+│   │       └── index.ts            # TypeScript interfaces
+│   ├── tailwind.config.js          # Tailwind config with custom colors
+│   ├── tsconfig.json
+│   └── package.json
+│
+├── server/                          # Backend (Node.js/Express)
+│   ├── src/
+│   │   ├── index.ts                # Server entry point
+│   │   ├── config/
+│   │   │   ├── database.ts         # Database configuration
+│   │   │   └── prisma.ts           # Prisma configuration
+│   │   ├── controllers/
+│   │   │   ├── reflectionController.ts
+│   │   │   ├── searchController.ts
+│   │   │   ├── verseController.ts
+│   │   │   └── ...other controllers
+│   │   ├── models/
+│   │   │   ├── User.ts
+│   │   │   ├── Reflection.ts
+│   │   │   └── SearchHistory.ts
+│   │   ├── routes/
+│   │   │   └── index.ts            # API route definitions
+│   │   ├── services/
+│   │   │   ├── quranApiService.ts  # Quran.com API integration
+│   │   │   ├── cacheService.ts     # Caching logic
+│   │   │   └── tokenService.ts
+│   │   └── scripts/
+│   │       └── syncDb.ts           # Database sync script
+│   ├── prisma/
+│   │   ├── schema.prisma           # Database schema
+│   │   └── migrations/
+│   ├── tsconfig.json
+│   └── package.json
+│
+└── .gitignore
 ```
 
-### Frontend
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ and npm/yarn
+- PostgreSQL database
+- Google OAuth credentials (for authentication)
+- Environment variables configured
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/sarcaxticlarka/quran.git
+   cd quran
+   ```
+
+2. **Setup Backend**
+   ```bash
+   cd server
+   npm install
+   
+   # Configure environment variables
+   cp .env.example .env
+   
+   # Setup database
+   npm run db:sync
+   npm run build
+   npm run start
+   ```
+
+3. **Setup Frontend**
+   ```bash
+   cd ../client
+   npm install
+   
+   # Configure environment variables
+   cp .env.example .env.local
+   
+   # Start development server
+   npm run dev
+   ```
+ 
+---
+
+## 📚 API Endpoints
+
+### Verses
+- `GET /api/verse-of-day` - Get daily verse
+- `GET /api/verses/:verse_key` - Get specific verse
+- `GET /api/verses/search?query=...` - Search verses
+
+### Reflections
+- `GET /api/reflections/:verse_key` - Get reflections for a verse
+- `POST /api/reflections` - Create new reflection
+- `DELETE /api/reflections/:id` - Delete reflection
+
+### Search
+- `POST /api/search` - Advanced search with filters
+- `GET /api/search-history` - Get user's search history
+
+### Authentication
+- `POST /api/auth/google` - Google OAuth login
+- `GET /api/auth/user` - Get current user
+- `POST /api/auth/logout` - User logout
+
+---
+
+## 🎨 Design Features
+
+### Color Palette
+- **Primary Green**: `#6fa44a` - Nature, life, spirituality
+- **Gold Accent**: `#ffd700` - Celestial, nobility
+- **Purple Accent**: `#a78bfa` - Elegance, wisdom
+- **Neutral**: Gray shades for text and backgrounds
+
+### Islamic Design Elements
+- Crescent moon icon in header
+- Mosque icon for spiritual significance
+- Geometric SVG patterns
+- Arabic typography (Amiri font)
+- Bismillah (﷽) symbol on home page
+- Border-left accents on cards mimicking Islamic tilework
+
+### User Experience
+- Smooth animations and transitions
+- Loading states with spinners
+- Error messages with helpful guidance
+- Mobile-responsive layouts
+- Accessibility-first design
+- Dark mode compatible
+
+---
+
+## 🔐 Security Features
+
+- **OAuth2 Authentication** with Google Sign-in
+- **JWT Token Management** for secure API access
+- **CORS Protection** - Restricted to frontend URL
+- **SQL Injection Prevention** - Prisma ORM sanitizes queries
+- **XSS Protection** - React's built-in sanitization
+ 
+---
+
+## 📊 Data Caching Strategy
+
+The application implements a two-tier caching strategy for performance:
+
+1. **Token Cache** (5 minutes)
+   - Stores OAuth tokens to reduce authentication calls
+
+2. **Data Cache** (24 hours for verses, 7 days for translations)
+   - Caches frequently accessed Quranic data
+   - Reduces external API calls
+   - Improves page load times
+
+---
+
+## 🧪 Testing
+
+### Manual Testing Checklist
+
+**Home Page**
+- [ ] Verse of the day displays on page load
+- [ ] Arabic text renders correctly
+- [ ] Translation displays below Arabic text
+- [ ] "Add Reflection" button opens modal
+
+**Search**
+- [ ] Search form accepts input
+- [ ] Results display in cards
+- [ ] Pagination works correctly
+- [ ] Help text shows for new users
+
+**Reflections**
+- [ ] Login required to save reflection
+- [ ] Reflection text saves successfully
+- [ ] Previous reflections display with timestamps
+- [ ] Multiple reflections per verse work
+
+---
+
+## 🚢 Deployment
+
+### Frontend (Vercel)
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm start        # Start production server
-npm run lint     # Run ESLint
+cd client
+npm run build
+# Deploy to Vercel
 ```
 
-## 🌐 Deployment
+### Backend (Railway/Render/Heroku)
+```bash
+cd server
+npm run build
+# Deploy with PostgreSQL database
+```
 
-### Backend
-1. Set environment variables on your hosting platform
-2. Run `npm run build`
-3. Run `npm run db:sync` to setup database
-4. Start with `npm start`
+---
 
-### Frontend
-1. Set `NEXT_PUBLIC_API_URL` to your backend URL
-2. Run `npm run build`
-3. Deploy the `.next` folder
-4. Or use `npm start` for Node.js hosting
+## 📖 Features Overview
 
-## 📚 Additional Information
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Verse of the Day | ✅ Complete | Random daily verse with translation |
+| Advanced Search | ✅ Complete | Search by keywords or references |
+| Personal Reflections | ✅ Complete | Save and view personal thoughts |
+| Google Authentication | ✅ Complete | Secure OAuth login |
+| Islamic UI Theme | ✅ Complete | Beautiful, culturally-inspired design |
+| Mobile Responsive | ✅ Complete | Works on all screen sizes |
+| Search History | ✅ Complete | Track user searches |
+| Arabic Typography | ✅ Complete | Proper Uthmani font rendering |
+| Caching | ✅ Complete | Performance optimization |
+| Error Handling | ✅ Complete | User-friendly error messages |
 
-- **API Documentation**: See individual README files in `server/` and `client/`
-- **Database Credentials**: Already configured in `.env` files
-- **API Credentials**: Pre-configured for Quran.Foundation API
+---
+ 
+ 
+ 
 
-## 🤝 Contributing
+---
 
-This is a portfolio/demonstration project. Feel free to fork and modify for your own use.
+## 🌟 Version History
 
-## 📄 License
+### v1.0.0 (Current)
+- ✅ Core features implemented
+- ✅ Islamic-inspired UI theme
+- ✅ Advanced search functionality
+- ✅ Personal reflections system
+- ✅ Google authentication
+- ✅ Performance optimization with caching
 
-MIT
+---
 
-## 👨‍💻 Author
+**Built with ❤️ for the Quran and its seekers**
 
-Built as a full-stack demonstration project showcasing:
-- RESTful API design
-- Database integration
-- OAuth2 authentication
-- Caching strategies
-- TypeScript best practices
-- Modern React patterns
-- Responsive UI design
+*"Indeed, those who have believed and done righteous deeds will have gardens beneath which rivers flow."* - Quran 2:25

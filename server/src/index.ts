@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sequelize from './config/database';
+import prisma from './config/prisma';
 import routes from './routes';
 
 // Load environment variables
@@ -57,13 +57,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // Database connection and server start
 const startServer = async () => {
   try {
-    // Test database connection
-    await sequelize.authenticate();
+    // Test Prisma connection
+    await prisma.$queryRaw`SELECT 1`;
     console.log('✅ Database connection established successfully');
-
-    // Sync database models
-    await sequelize.sync({ alter: true });
-    console.log('✅ Database models synchronized');
 
     // Start server
     app.listen(PORT, () => {
