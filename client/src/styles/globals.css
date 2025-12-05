@@ -36,7 +36,7 @@ body {
     ),
     rgb(var(--background-start-rgb));
   font-family: 'Inter', 'Amiri', 'Noto Naskh Arabic', 'Scheherazade New', serif;
-  /* Subtle Islamic geometric pattern overlay */
+  
   background-image:
     var(--pattern-url),
     linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)));
